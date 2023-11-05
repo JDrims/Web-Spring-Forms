@@ -11,18 +11,30 @@ import java.util.List;
 public class Request {
     private final String method;
     private final String path;
-    private final String body;
+    private final List<NameValuePair> body;
+    private final List<NameValuePair> param;
 
     public Request(String method, String path) {
         this.method = method;
         this.path = path;
         this.body = null;
+        try {
+            this.param = URLEncodedUtils.parse(new URI(this.path), StandardCharsets.UTF_8);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        ;
     }
 
     public Request(String method, String path, String body) {
         this.method = method;
         this.path = path;
-        this.body = body;
+        this.body = URLEncodedUtils.parse(body, StandardCharsets.UTF_8);
+        try {
+            this.param = URLEncodedUtils.parse(new URI(this.path), StandardCharsets.UTF_8);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getMethod() {
@@ -49,7 +61,7 @@ public class Request {
     }
 
     public List<NameValuePair> getQueryParams() throws URISyntaxException {
-        return URLEncodedUtils.parse(new URI(this.path), StandardCharsets.UTF_8);
+        return this.param;
     }
 
     public String getPostParam(String name) {
@@ -63,6 +75,6 @@ public class Request {
     }
 
     public List<NameValuePair> getPostParams() {
-        return URLEncodedUtils.parse(body, StandardCharsets.UTF_8);
+        return this.body;
     }
 }

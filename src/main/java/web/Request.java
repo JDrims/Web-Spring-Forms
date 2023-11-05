@@ -50,7 +50,7 @@ public class Request {
         }
     }
 
-    public String getQureyParam(String name) throws URISyntaxException {
+    public String getQureyParam(String name) {
         List<NameValuePair> params = getQueryParams();
         for (NameValuePair param : params) {
             if (param.getName().equals(name)) {
@@ -60,7 +60,7 @@ public class Request {
         return null;
     }
 
-    public List<NameValuePair> getQueryParams() throws URISyntaxException {
+    public List<NameValuePair> getQueryParams() {
         return this.param;
     }
 
